@@ -6,13 +6,15 @@ import cors from "cors";
 import authRouter from "./routes/authRouter.js";
 dotEnv.config();
 const app = express();
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: process.env.CLIENT_URL,
     credentials: true,
   }),
 );
-app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
 const PORT = process.env.PORT || 5000;
