@@ -2,11 +2,14 @@ import {
   generateTokens,
   logError,
   sendEmailVerification,
+  sendForgotPasswordLinkFun,
   userObj,
 } from "../lib/utils.js";
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import crypto from "crypto";
+
 export async function signUpController(req, res) {
   console.log(req.body);
   const { email, name, password } = req.body;
@@ -151,6 +154,69 @@ export async function verifyEmailController(req, res) {
     return res.status(200).json({ message: "Email verified successfully" });
   } catch (err) {
     logError("verifyEmail", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
+// send forgot password controller
+export async function sendForgotPasswordController(req, res) {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ message: "Email is required" });
+
+  try {
+    const user = await UserModel.findOne({ email }).select(
+      "-password +forgotPasswordCode +forgotPasswordCodeExpires",
+    );
+    if (!user)
+      return res.status(200).json({
+        message:
+          "If this email exists, you will receive a password reset email",
+      });
+    const code = crypto.randomBytes(16).toString("hex");
+
+    user.forgotPasswordCode = code;
+    user.forgotPasswordCodeExpires = Date.now() + 15 * 60 * 1000;
+    await user.save();
+    const { success } = await sendForgotPasswordLinkFun(user, code);
+    if (success) {
+      return res.status(200).json({
+        message:
+          "If this email exists, you will receive a password reset email",
+      });
+    }
+    throw new Error("something went wrong");
+  } catch (err) {
+    console.log("error in the sendforgotcontroller ", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
+export async function resetPasswordController(req, res) {
+  const { email, password } = req.body;
+  const { code } = req.params;
+  if (!email) return res.status(400).json({ message: "Email is required" });
+  if (!password)
+    return res.status(400).json({ message: "Password is required" });
+  if (!code)
+    return res.status(400).json({ message: "Reset Password code is missing" });
+  try {
+    const user = await UserModel.findOne({ email }).select(
+      "+forgotPasswordCodeExpires +forgotPasswordCode -password",
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (
+      user.forgotPasswordCode !== code ||
+      user.forgotPasswordCodeExpires <= Date.now()
+    )
+      return res.status(400).json({ message: "Invalid or expired code" });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.forgotPasswordCode = null;
+    user.forgotPasswordCodeExpires = null;
+    await user.save();
+    return res.status(200).json({ message: "Password reset successfully" });
+  } catch (err) {
+    logError("resetPassword", err);
     return res.status(500).json({ message: "Server error" });
   }
 }

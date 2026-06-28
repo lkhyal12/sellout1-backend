@@ -31,7 +31,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       select: false,
     },
-    forgotPasswordCodeExpires: Date,
+    forgotPasswordCodeExpires: {
+      type: Date,
+      select: false,
+    },
     cart: [
       {
         product: {
