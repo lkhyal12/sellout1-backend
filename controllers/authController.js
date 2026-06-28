@@ -1,4 +1,9 @@
-import { generateTokens, logError, userObj } from "../lib/utils.js";
+import {
+  generateTokens,
+  logError,
+  sendEmailVerification,
+  userObj,
+} from "../lib/utils.js";
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -21,6 +26,13 @@ export async function signUpController(req, res) {
       email: emailTrimmed,
       password: hashedPassword,
     });
+    const code = Math.floor(Math.random() * 900000) + 100000;
+    const { success } = await sendEmailVerification(user, code);
+    console.log({ user });
+    user.verifyEmailCode = code;
+    user.verifyEmailCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+
     const { accessToken, refreshToken } = generateTokens(user);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
@@ -29,7 +41,8 @@ export async function signUpController(req, res) {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     return res.status(201).json({
-      message: "User created successfully",
+      message:
+        "User created successfully Please your email to verify your email",
       accessToken,
       user: userObj(user),
     });
@@ -49,6 +62,15 @@ export async function loginController(req, res) {
     const user = await UserModel.findOne({ email: email.trim() });
     if (!user) return res.status(400).json({ message: "Invalid Credentials" });
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    let message = "You logged in successfully";
+    if (!user.verified) {
+      const code = Math.floor(Math.random() * 900000) + 100000;
+      await sendEmailVerification(user, code);
+      user.verifyEmailCode = code;
+      user.verifyEmailCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+      await user.save();
+      message = "Please check your email to verify your account";
+    }
     if (!isPasswordValid)
       return res.status(400).json({ message: "Invalid Credentials" });
     const { accessToken, refreshToken } = generateTokens(user);
@@ -61,7 +83,7 @@ export async function loginController(req, res) {
 
     return res
       .status(200)
-      .json({ message: "You are Logged in", accessToken, user: userObj(user) });
+      .json({ message: message, accessToken, user: userObj(user) });
   } catch (err) {
     logError("login", err);
     return res.status(500).json({ message: "Server error" });
@@ -94,11 +116,41 @@ export async function refreshController(req, res) {
     const user = await UserModel.findById(decoded.userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found" });
     const { accessToken } = generateTokens(user);
+
     return res
       .status(200)
       .json({ message: "New accessToken was issued", accessToken });
   } catch (err) {
     logError("refresh", err);
     return res.status(401).json({ message: "Invalid refreshToken" });
+  }
+}
+
+// verify email controller
+
+export async function verifyEmailController(req, res) {
+  const { email, code } = req.body;
+  if (!email) return res.status(400).json({ message: "Missing email address" });
+  if (!code)
+    return res.status(400).json({ message: "Missing verificatio code" });
+
+  try {
+    const user = await UserModel.findOne({ email }).select(
+      "+verifyEmailCode +verifyEmailCodeExpires -password",
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+    if (
+      user.verifyEmailCode !== code.toString() ||
+      user.verifyEmailCodeExpires <= Date.now()
+    )
+      return res.status(400).json({ message: "Invalid or expired code" });
+    user.verified = true;
+    user.verifyEmailCode = null;
+    user.verifyEmailCodeExpires = null;
+    await user.save();
+    return res.status(200).json({ message: "Email verified successfully" });
+  } catch (err) {
+    logError("verifyEmail", err);
+    return res.status(500).json({ message: "Server error" });
   }
 }

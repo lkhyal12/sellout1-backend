@@ -5,6 +5,7 @@ import {
   logoutController,
   refreshController,
   signUpController,
+  verifyEmailController,
 } from "../controllers/authController.js";
 import { protectedRoute } from "../middleware/protectedRoute.js";
 import { lmmiter } from "../middleware/limmiter.js";
@@ -15,4 +16,5 @@ authRouter.post("/login", loginController);
 authRouter.post("/logout", logoutController);
 authRouter.get("/profile", protectedRoute, getProfileController);
 authRouter.get("/refresh", refreshController);
+authRouter.post("/verify-email", verifyEmailController);
 export default authRouter;
