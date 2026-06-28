@@ -1,7 +1,7 @@
 import { generateTokens, logError, userObj } from "../lib/utils.js";
 import UserModel from "../models/UserModel.js";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
 export async function signUpController(req, res) {
   console.log(req.body);
   const { email, name, password } = req.body;
@@ -76,4 +76,29 @@ export async function logoutController(req, res) {
     sameSite: "strict",
   });
   return res.status(200).json({ message: "Logged out successfully" });
+}
+
+// get profile controller
+export async function getProfileController(req, res) {
+  return res
+    .status(200)
+    .json({ message: "User sent successfully", user: userObj(req.user) });
+}
+
+export async function refreshController(req, res) {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken)
+    return res.status(401).json({ message: "Missing refreshToken" });
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const user = await UserModel.findById(decoded.userId).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const { accessToken } = generateTokens(user);
+    return res
+      .status(200)
+      .json({ message: "New accessToken was issued", accessToken });
+  } catch (err) {
+    logError("refresh", err);
+    return res.status(401).json({ message: "Invalid refreshToken" });
+  }
 }
