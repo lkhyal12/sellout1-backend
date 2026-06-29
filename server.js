@@ -4,6 +4,7 @@ import dotEnv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/authRouter.js";
+import productsRouter from "./routes/productsRouter.js";
 dotEnv.config();
 const app = express();
 app.use(cookieParser());
@@ -17,6 +18,7 @@ app.use(
 );
 
 app.use("/api/auth", authRouter);
+app.use("/api/products", productsRouter);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   mongoose
