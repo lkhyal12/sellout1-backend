@@ -8,6 +8,7 @@ const ProductSchema = new mongoose.Schema(
     image: { type: String, required: true },
     description: { type: String, required: true },
     isFeatured: { type: Boolean, default: false },
+    imagePublicId: { type: String },
   },
   { timestamps: true },
 );
