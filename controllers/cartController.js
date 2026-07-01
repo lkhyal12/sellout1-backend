@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { logError } from "../lib/utils.js";
-import ProductModel from "../models/ProductModel";
+import ProductModel from "../models/ProductModel.js";
 import UserModel from "../models/UserModel.js";
 
 export async function getCartProducts(req, res) {
