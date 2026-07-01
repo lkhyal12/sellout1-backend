@@ -80,3 +80,46 @@ export async function updateQuantityController(req, res) {
     return res.status(500).json({ message: "Server error" });
   }
 }
+
+// remove from cart controller
+export async function removeFromCartController(req, res) {
+  const { id } = req.params;
+  if (!id) return res.status(400).json({ message: "Missing product ID" });
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(400).json({ message: "Invalid product ID" });
+
+  try {
+    const user = await UserModel.findById(req.user._id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const originalCartLength = user.cart.length;
+    user.cart = user.cart.filter(
+      (item) => item.product.toString() !== id.toString(),
+    );
+    if (user.cart.length === originalCartLength)
+      return res.status(404).json({ message: "Product not found in cart" });
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ message: "Product removed from cart", cart: user.cart });
+  } catch (err) {
+    logError("removeFromCartController", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
+
+// cleart cart controller
+export async function clearCartController(req, res) {
+  try {
+    const user = await UserModel.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+    user.cart = [];
+    await user.save();
+    return res
+      .status(200)
+      .json({ message: "Cart cleared successfully", cart: user.cart });
+  } catch (err) {
+    logError("clearCartController", err);
+    return res.status(500).json({ message: "Server error" });
+  }
+}
