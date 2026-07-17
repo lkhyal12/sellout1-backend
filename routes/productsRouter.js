@@ -1,5 +1,5 @@
 import express from "express";
-import { isAdmin } from "../middleware/isAdmin";
+import { isAdmin } from "../middleware/isAdmin.js";
 import { protectedRoute } from "../middleware/protectedRoute.js";
 import {
   createProductController,
@@ -9,7 +9,7 @@ import {
   getSingleProductConroller,
   removeProductController,
   toggleFeaturedProduct,
-} from "../controllers/productsController";
+} from "../controllers/productsController.js";
 
 const productsRouter = express.Router();
 productsRouter.get("/", protectedRoute, isAdmin, getAllProductsController);

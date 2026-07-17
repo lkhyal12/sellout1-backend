@@ -1,0 +1,50 @@
+Date : 2026-07-01 06:38:47
+Directory : c:\Users\a\Desktop\code\full stack apps\sellout1\backend
+Total : 19 files,  2747 codes, 21 comments, 96 blanks, all 2864 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JSON       |          2 |      1,728 |          0 |          2 |      1,730 |
+| JavaScript |         17 |      1,019 |         21 |         94 |      1,134 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                       | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                          |         19 |      2,747 |         21 |         96 |      2,864 |
+| . (Files)                                                                                  |          3 |      1,755 |          0 |          4 |      1,759 |
+| controllers                                                                                |          4 |        518 |         19 |         59 |        596 |
+| lib                                                                                        |          3 |        248 |          2 |         12 |        262 |
+| middleware                                                                                 |          3 |         40 |          0 |          6 |         46 |
+| models                                                                                     |          3 |        121 |          0 |          9 |        130 |
+| routes                                                                                     |          3 |         65 |          0 |          6 |         71 |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                   | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\authController.js     | JavaScript |        199 |          5 |         19 |        223 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\cartController.js     | JavaScript |        107 |          3 |         16 |        126 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\paymentController.js  | JavaScript |         90 |          5 |         11 |        106 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\productsController.js | JavaScript |        122 |          6 |         13 |        141 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\lib\cloudinary.js                 | JavaScript |          7 |          0 |          3 |         10 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\lib\nodemailer.js                 | JavaScript |         10 |          0 |          1 |         11 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\lib\utils.js                      | JavaScript |        231 |          2 |          8 |        241 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\middleware\isAdmin.js             | JavaScript |         10 |          0 |          1 |         11 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\middleware\limmiter.js            | JavaScript |         10 |          0 |          2 |         12 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\middleware\protectedRoute.js      | JavaScript |         20 |          0 |          3 |         23 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\models\OrderModel.js              | JavaScript |         51 |          0 |          3 |         54 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\models\ProductModel.js            | JavaScript |         15 |          0 |          3 |         18 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\models\UserModel.js               | JavaScript |         55 |          0 |          3 |         58 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\package-lock.json                 | JSON       |      1,698 |          0 |          1 |      1,699 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\package.json                      | JSON       |         30 |          0 |          1 |         31 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\routes\authRouter.js              | JavaScript |         23 |          0 |          2 |         25 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\routes\cartRouter.js              | JavaScript |         16 |          0 |          2 |         18 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\routes\productsRouter.js          | JavaScript |         26 |          0 |          2 |         28 |
+| c:\Users\a\Desktop\code\full stack apps\sellout1\backend\server.js                         | JavaScript |         27 |          0 |          2 |         29 |
+| Total                                                                                      |            |      2,747 |         21 |         96 |      2,864 |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

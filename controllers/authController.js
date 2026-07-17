@@ -11,7 +11,6 @@ import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
 export async function signUpController(req, res) {
-  console.log(req.body);
   const { email, name, password } = req.body;
   const trimmedName = name?.trim();
   const emailTrimmed = email?.trim();
@@ -107,7 +106,7 @@ export async function logoutController(req, res) {
 export async function getProfileController(req, res) {
   return res
     .status(200)
-    .json({ message: "User sent successfully", user: userObj(req.user) });
+    .json({ message: "User sent successfully", user: req.user });
 }
 
 export async function refreshController(req, res) {
@@ -126,6 +125,38 @@ export async function refreshController(req, res) {
   } catch (err) {
     logError("refresh", err);
     return res.status(401).json({ message: "Invalid refreshToken" });
+  }
+}
+// send verification email controller
+
+export async function sendEmailVerifcationController(req, res) {
+  const { email } = req.body;
+  if (!email?.trim())
+    return res.status(400).json({ message: "Missing email address" });
+
+  try {
+    const user = await UserModel.findOne({ email }).select(
+      "-password +verifyEmailCodeExpires +verifyEmailCode",
+    );
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.verified)
+      return res.status(200).json({ message: "This Account already verified" });
+
+    const code = Math.floor(Math.random() * 900000) + 100000;
+
+    user.verifyEmailCode = code.toString();
+    user.verifyEmailCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+    const { success } = await sendEmailVerification(user, code);
+    if (!success)
+      return res.status(500).json({
+        message: "Failed to send a verification code please try again later",
+      });
+
+    return res.status(200).json({ message: "Verification code successfully " });
+  } catch (err) {
+    return res.status(500).json({ message: "Server error " });
   }
 }
 
@@ -151,7 +182,9 @@ export async function verifyEmailController(req, res) {
     user.verifyEmailCode = null;
     user.verifyEmailCodeExpires = null;
     await user.save();
-    return res.status(200).json({ message: "Email verified successfully" });
+    return res
+      .status(200)
+      .json({ message: "Email verified successfully", user });
   } catch (err) {
     logError("verifyEmail", err);
     return res.status(500).json({ message: "Server error" });
@@ -192,22 +225,20 @@ export async function sendForgotPasswordController(req, res) {
 }
 
 export async function resetPasswordController(req, res) {
-  const { email, password } = req.body;
+  const { password } = req.body;
   const { code } = req.params;
-  if (!email) return res.status(400).json({ message: "Email is required" });
+
   if (!password)
     return res.status(400).json({ message: "Password is required" });
   if (!code)
     return res.status(400).json({ message: "Reset Password code is missing" });
   try {
-    const user = await UserModel.findOne({ email }).select(
+    const user = await UserModel.findOne({ forgotPasswordCode: code }).select(
       "+forgotPasswordCodeExpires +forgotPasswordCode -password",
     );
-    if (!user) return res.status(404).json({ message: "User not found" });
-    if (
-      user.forgotPasswordCode !== code ||
-      user.forgotPasswordCodeExpires <= Date.now()
-    )
+    if (!user)
+      return res.status(400).json({ message: "Invalid or expired code" });
+    if (user.forgotPasswordCodeExpires <= Date.now())
       return res.status(400).json({ message: "Invalid or expired code" });
     const hashedPassword = await bcrypt.hash(password, 10);
     user.password = hashedPassword;

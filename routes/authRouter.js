@@ -5,6 +5,7 @@ import {
   logoutController,
   refreshController,
   resetPasswordController,
+  sendEmailVerifcationController,
   sendForgotPasswordController,
   signUpController,
   verifyEmailController,
@@ -21,4 +22,9 @@ authRouter.get("/refresh", refreshController);
 authRouter.post("/verify-email", verifyEmailController);
 authRouter.post("/send-password-reset-link", sendForgotPasswordController);
 authRouter.post("/reset-password/:code", resetPasswordController);
+authRouter.post(
+  "/send-email-verification",
+  protectedRoute,
+  sendEmailVerifcationController,
+);
 export default authRouter;

@@ -12,7 +12,7 @@ export async function getCartProducts(req, res) {
 
     return res
       .status(200)
-      .json({ message: "products sent successfully", products: user.cart });
+      .json({ message: "products sent successfully", cart: user.cart });
   } catch (err) {
     logError("getCartProductsController", err);
     return res.status(500).json({ message: "Server error" });
@@ -40,7 +40,11 @@ export async function addToCartController(req, res) {
 
     return res
       .status(200)
-      .json({ message: "Product added successfully", cart: user.cart });
+      .json({
+        message: "Product added successfully",
+        cart: user.cart,
+        product: existingProduct,
+      });
   } catch (err) {
     logError("addToCartController", err);
     return res.status(500).json({ message: "Server error" });

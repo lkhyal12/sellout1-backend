@@ -1,0 +1,21 @@
+"filename", "language", "JavaScript", "JSON", "comment", "blank", "total"
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\authController.js", "JavaScript", 199, 0, 5, 19, 223
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\cartController.js", "JavaScript", 107, 0, 3, 16, 126
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\paymentController.js", "JavaScript", 90, 0, 5, 11, 106
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\controllers\productsController.js", "JavaScript", 122, 0, 6, 13, 141
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\lib\cloudinary.js", "JavaScript", 7, 0, 0, 3, 10
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\lib\nodemailer.js", "JavaScript", 10, 0, 0, 1, 11
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\lib\utils.js", "JavaScript", 231, 0, 2, 8, 241
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\middleware\isAdmin.js", "JavaScript", 10, 0, 0, 1, 11
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\middleware\limmiter.js", "JavaScript", 10, 0, 0, 2, 12
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\middleware\protectedRoute.js", "JavaScript", 20, 0, 0, 3, 23
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\models\OrderModel.js", "JavaScript", 51, 0, 0, 3, 54
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\models\ProductModel.js", "JavaScript", 15, 0, 0, 3, 18
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\models\UserModel.js", "JavaScript", 55, 0, 0, 3, 58
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\package-lock.json", "JSON", 0, 1698, 0, 1, 1699
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\package.json", "JSON", 0, 30, 0, 1, 31
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\routes\authRouter.js", "JavaScript", 23, 0, 0, 2, 25
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\routes\cartRouter.js", "JavaScript", 16, 0, 0, 2, 18
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\routes\productsRouter.js", "JavaScript", 26, 0, 0, 2, 28
+"c:\Users\a\Desktop\code\full stack apps\sellout1\backend\server.js", "JavaScript", 27, 0, 0, 2, 29
+"Total", "-", 1019, 1728, 21, 96, 2864
