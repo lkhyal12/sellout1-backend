@@ -37,14 +37,12 @@ export async function addToCartController(req, res) {
     if (product) product.quantity++;
     else user.cart.push({ product: productId, quantity: 1 });
     await user.save();
-
-    return res
-      .status(200)
-      .json({
-        message: "Product added successfully",
-        cart: user.cart,
-        product: existingProduct,
-      });
+    await user.populate("cart.product");
+    return res.status(200).json({
+      message: "Product added successfully",
+      cart: user.cart,
+      product: existingProduct,
+    });
   } catch (err) {
     logError("addToCartController", err);
     return res.status(500).json({ message: "Server error" });
@@ -88,6 +86,7 @@ export async function updateQuantityController(req, res) {
 // remove from cart controller
 export async function removeFromCartController(req, res) {
   const { id } = req.params;
+  console.log({ id });
   if (!id) return res.status(400).json({ message: "Missing product ID" });
   if (!mongoose.Types.ObjectId.isValid(id))
     return res.status(400).json({ message: "Invalid product ID" });

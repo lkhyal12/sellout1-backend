@@ -6,6 +6,7 @@ import cloudinary from "../lib/cloudinary.js";
 export async function getAllProductsController(req, res) {
   try {
     const products = await ProductModel.find().lean();
+    console.log(products);
     return res
       .status(200)
       .json({ message: "Products sent successfully", products });
@@ -96,7 +97,7 @@ export async function getFeaturedProducts(req, res) {
 
 // toggle Featured product
 export async function toggleFeaturedProduct(req, res) {
-  const { productId } = req.body;
+  const { id: productId } = req.params;
 
   if (!productId)
     return res.status(400).json({ message: "Missing product id" });
