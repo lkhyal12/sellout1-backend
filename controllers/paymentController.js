@@ -3,7 +3,11 @@ import UserModel from "../models/UserModel.js";
 import { logError } from "../lib/utils.js";
 import OrderModel from "../models/OrderModel.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+let stripe = null;
+
+if (process.env.STRIPE_SECRET_KEY) {
+  stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+}
 
 export async function createCheckoutSession(req, res) {
   try {
@@ -65,12 +69,10 @@ export async function checkoutSuccess(req, res) {
       stripeSessionId: session.id,
     });
     if (existingOrder)
-      return res
-        .status(200)
-        .json({
-          message: "Order is being processed",
-          orderId: existingOrder._id.toString(),
-        });
+      return res.status(200).json({
+        message: "Order is being processed",
+        orderId: existingOrder._id.toString(),
+      });
     const user = await UserModel.findById(req.user._id).populate(
       "cart.product",
     );
