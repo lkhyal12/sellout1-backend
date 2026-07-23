@@ -34,7 +34,8 @@ export async function createCheckoutSession(req, res) {
       cancel_url: `${process.env.CLIENT_URL}/cart`,
       customer_email: user.email,
       metadata: {
-        userId: user._id,
+        userId: user._id.toString(),
+        cartItems: user.cart.length.toString(),
       },
     });
 
@@ -64,7 +65,12 @@ export async function checkoutSuccess(req, res) {
       stripeSessionId: session.id,
     });
     if (existingOrder)
-      return res.status(200).json({ message: "Order is being processed" });
+      return res
+        .status(200)
+        .json({
+          message: "Order is being processed",
+          orderId: existingOrder._id.toString(),
+        });
     const user = await UserModel.findById(req.user._id).populate(
       "cart.product",
     );
@@ -95,9 +101,10 @@ export async function checkoutSuccess(req, res) {
     });
     user.cart = [];
     await user.save();
-    return res
-      .status(201)
-      .json({ message: "Order created successfully", order });
+    return res.status(201).json({
+      message: "Order created successfully",
+      orderId: order._id.toString(),
+    });
   } catch (err) {
     logError("checkoutsuccess", err);
     return res.status(500).json({ message: "Server error " });
