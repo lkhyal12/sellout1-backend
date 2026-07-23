@@ -18,7 +18,7 @@ app.use(
     credentials: true,
   }),
 );
-app.get("/api", (req, res) => res.send("Welcome to my api"));
+app.get("/", (req, res) => res.send("Welcome to my api"));
 app.use("/api/auth", authRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/cart", cartRouter);
