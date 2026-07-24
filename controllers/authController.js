@@ -88,7 +88,7 @@ export async function loginController(req, res) {
       .json({ message: message, accessToken, user: userObj(user) });
   } catch (err) {
     logError("login", err);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error", err });
   }
 }
 
